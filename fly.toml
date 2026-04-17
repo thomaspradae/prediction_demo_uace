@@ -1,0 +1,40 @@
+# fly.toml - Fly.io deployment config
+# After running `fly launch`, the app name below will be set automatically.
+
+app = "prediction-market-demo"
+primary_region = "mia"  # Miami - pick closest: iad (virginia), lax (los angeles), bog (bogota), gru (sao paulo), mad (madrid), ams (amsterdam), fra (frankfurt)
+
+[build]
+
+[env]
+  NODE_ENV = "production"
+  PORT = "8080"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = "suspend"
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ["app"]
+
+  [http_service.concurrency]
+    type = "connections"
+    hard_limit = 250
+    soft_limit = 200
+
+  [[http_service.checks]]
+    grace_period = "10s"
+    interval = "30s"
+    method = "GET"
+    timeout = "5s"
+    path = "/healthz"
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "256mb"
+  cpu_kind = "shared"
+  cpus = 1
+
+[processes]
+  app = "node server.js"
