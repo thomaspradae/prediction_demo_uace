@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Jugar | Mercado de Canicas</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <main class="page phone-page">
+      <div class="topbar">
+        <div class="brand">Mercado de Canicas</div>
+        <nav class="toplinks">
+          <a href="/">Unirse</a>
+          <a href="/screen">Pantalla</a>
+          <a href="/results">Resultados</a>
+        </nav>
+      </div>
+
+      <div class="grid play-grid">
+        <section class="panel">
+          <p class="pill" id="player-role-pill">Esperando tu rol</p>
+          <h1 class="question" id="player-question">¿La canica final será ROJA?</h1>
+          <p id="player-name" class="subtle"></p>
+          <div id="play-message" class="banner" hidden></div>
+        </section>
+
+        <section class="panel">
+          <h2>Pista privada</h2>
+          <p id="player-clue" class="subtle">Esperando a que empiece la ronda.</p>
+        </section>
+
+        <section class="panel">
+          <h2>Tu posición</h2>
+          <div class="stat-grid">
+            <div class="stat">
+              <div class="stat-label">Efectivo</div>
+              <div id="player-cash" class="stat-value">$100.00</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">Acciones SÍ</div>
+              <div id="player-yes" class="stat-value">0</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">Acciones NO</div>
+              <div id="player-no" class="stat-value">0</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <h2>Mercado compartido</h2>
+          <div class="price-value" id="player-price">$0.50</div>
+          <div class="probability" id="player-probability">Probabilidad implícita = 50%</div>
+          <p class="subtle" id="player-timer">Esperando a empezar</p>
+        </section>
+
+        <section class="panel">
+          <h2>Operar</h2>
+          <div class="button-row">
+            <button id="buy-yes" class="action action-yes" type="button">Comprar SÍ</button>
+            <button id="buy-no" class="action action-no" type="button">Comprar NO</button>
+          </div>
+        </section>
+
+        <section class="panel">
+          <h2>Operaciones recientes</h2>
+          <ul id="player-trades" class="feed-list"></ul>
+        </section>
+      </div>
+    </main>
+
+    <script src="/common.js"></script>
+    <script src="/play.js"></script>
+  </body>
+</html>

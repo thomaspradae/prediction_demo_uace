@@ -1,0 +1,16 @@
+{
+  "name": "prediction-market-demo",
+  "version": "1.0.0",
+  "description": "Classroom prediction market demo with private signals and a shared market price.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=18 <23"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
