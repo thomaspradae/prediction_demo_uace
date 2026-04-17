@@ -63,7 +63,7 @@ async function refreshScreen() {
   }
 }
 
-startButton.addEventListener("click", () => controlRound("/api/start", { roundSeconds: 30 }));
+startButton.addEventListener("click", () => controlRound("/api/start", { roundSeconds: 120 }));
 resolveButton.addEventListener("click", () => controlRound("/api/resolve"));
 resetButton.addEventListener("click", () => controlRound("/api/reset"));
 

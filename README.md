@@ -22,7 +22,7 @@ Rutas:
 - Los informados reciben una muestra privada con ruido de una bolsa oculta de canicas
 - Cada operación `YES` sube el precio en `0.04`
 - Cada operación `NO` baja el precio en `0.04`
-- La ronda se resuelve sola después de 30 segundos, a menos que la resuelvas antes desde `/screen`
+- La ronda se resuelve sola después de 2 minutos, a menos que la resuelvas antes desde `/screen`
 
 ## Desplegar en Render
 
