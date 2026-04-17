@@ -26,15 +26,28 @@ Juego interactivo de 5 rondas para demostrar cómo la información privilegiada 
 6. Al resolver, se revela la respuesta correcta y se compara cómo votaron los informados vs los no informados.
 7. El **leaderboard acumulado** rastrea el puntaje total ronda a ronda.
 
-## Las 5 rondas
+## Estructura de un juego
 
-| # | Escenario | Pregunta |
-|---|-----------|----------|
-| Ejemplo | Fútbol | ¿Equipo Azul gana la final? |
-| 1 | Fed | ¿La Fed sube la tasa de interés? |
-| 2 | Corporativo | ¿NovaTech supera estimaciones de Wall Street? |
-| 3 | Petróleo | ¿Brent cierra por encima de $85/barril? |
-| 4 | Banco Central | ¿El Banco Central baja la tasa? |
+Cada juego tiene **5 rondas**: 1 de ejemplo (fija) + **4 elegidas al azar** de un pool de 8 escenarios de finanzas. Cada vez que reinicies el juego, los 4 escenarios se vuelven a sortear y se mezcla su orden, así nunca sale lo mismo dos veces.
+
+### Ronda de ejemplo (siempre igual)
+
+- **Fútbol**: Inversiones Alternativas FC vs Deportivo Mercado de Capitales (gana Alternativas FC)
+
+### Pool de escenarios reales (se eligen 4 de 8 por juego)
+
+| ID | Pregunta |
+|---|---|
+| `fed` | ¿La Fed sube la tasa de interés? |
+| `earnings` | ¿NovaTech supera estimaciones de Wall Street? |
+| `oil` | ¿Brent cierra por encima de $85/barril? |
+| `rates` | ¿El Banco Central baja la tasa? |
+| `ipo` | ¿Nexus Biotech cierra su primer día por encima del precio de salida? |
+| `merger` | ¿La fusión GlobalBank–AtlanticTrust recibe aprobación regulatoria? |
+| `bonds` | ¿El bono del Tesoro a 10 años cierra por debajo de 4.0%? |
+| `crypto` | ¿Bitcoin cierra por encima de $70,000 al final del mes? |
+
+Para jugar con más (o menos) rondas reales, cambia `REAL_ROUNDS_PER_GAME` en `lib/game.js` (máx. 8 con el pool actual).
 
 ## Desplegar
 
