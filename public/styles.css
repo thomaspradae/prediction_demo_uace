@@ -1,15 +1,15 @@
 :root {
-  color-scheme: dark;
-  --bg: #0d1117;
-  --panel: #161b22;
-  --panel-alt: #1f2733;
-  --text: #e6edf3;
-  --muted: #9ba7b4;
-  --yes: #2ea043;
-  --no: #d29922;
-  --danger: #f85149;
-  --line: #30363d;
-  --shadow: 0 18px 40px rgba(0, 0, 0, 0.24);
+  color-scheme: light;
+  --bg: #f6f8fb;
+  --panel: #ffffff;
+  --panel-alt: #eef3f9;
+  --text: #16202a;
+  --muted: #5f6f82;
+  --yes: #2f9e44;
+  --no: #d69e2e;
+  --danger: #dc4c3f;
+  --line: #d6dee8;
+  --shadow: 0 14px 32px rgba(25, 45, 80, 0.08);
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
@@ -20,7 +20,7 @@
 body {
   margin: 0;
   min-height: 100vh;
-  background: linear-gradient(180deg, #0d1117 0%, #101722 100%);
+  background: linear-gradient(180deg, #f9fbfe 0%, #eef4fa 100%);
   color: var(--text);
 }
 
@@ -105,7 +105,7 @@ button:not(:disabled):hover {
 }
 
 .panel {
-  background: rgba(22, 27, 34, 0.88);
+  background: rgba(255, 255, 255, 0.94);
   border: 1px solid var(--line);
   border-radius: 8px;
   box-shadow: var(--shadow);
@@ -142,7 +142,7 @@ button:not(:disabled):hover {
 }
 
 .stat {
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--panel-alt);
   border: 1px solid var(--line);
   border-radius: 8px;
   padding: 14px;
@@ -189,7 +189,7 @@ button:not(:disabled):hover {
 
 .action-no {
   background: var(--no);
-  color: #111;
+  color: #1c1300;
 }
 
 .secondary,
@@ -199,7 +199,7 @@ button:not(:disabled):hover {
 }
 
 .secondary {
-  background: #21262d;
+  background: #edf3f8;
   color: var(--text);
   border-color: var(--line);
 }
@@ -224,7 +224,7 @@ button:not(:disabled):hover {
   padding: 0 14px;
   border-radius: 8px;
   border: 1px solid var(--line);
-  background: #0d1117;
+  background: #ffffff;
   color: var(--text);
 }
 
@@ -265,7 +265,7 @@ button:not(:disabled):hover {
   justify-content: space-between;
   gap: 12px;
   padding: 10px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(22, 32, 42, 0.08);
 }
 
 .feed-item:last-child,
@@ -282,11 +282,11 @@ button:not(:disabled):hover {
 }
 
 .side-yes {
-  color: #8ce99a;
+  color: #2f9e44;
 }
 
 .side-no {
-  color: #ffd166;
+  color: #b7791f;
 }
 
 .canvas-wrap {
@@ -297,7 +297,7 @@ canvas {
   display: block;
   width: 100%;
   height: 210px;
-  background: rgba(255, 255, 255, 0.02);
+  background: #f7fafc;
   border: 1px solid var(--line);
   border-radius: 8px;
 }
@@ -306,19 +306,19 @@ canvas {
   padding: 12px 14px;
   border-radius: 8px;
   border: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.03);
+  background: #f5f8fc;
 }
 
 .error {
-  border-color: rgba(248, 81, 73, 0.4);
-  background: rgba(248, 81, 73, 0.1);
-  color: #ffb4ae;
+  border-color: rgba(220, 76, 63, 0.28);
+  background: rgba(220, 76, 63, 0.1);
+  color: #9f2f25;
 }
 
 .success {
-  border-color: rgba(46, 160, 67, 0.35);
-  background: rgba(46, 160, 67, 0.12);
-  color: #9be9a8;
+  border-color: rgba(47, 158, 68, 0.28);
+  background: rgba(47, 158, 68, 0.1);
+  color: #216e30;
 }
 
 .screen-col-7 {
@@ -359,7 +359,7 @@ th,
 td {
   text-align: left;
   padding: 12px 10px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(22, 32, 42, 0.08);
 }
 
 th {
@@ -408,13 +408,13 @@ th {
 }
 
 .clue-badge.informed {
-  background: rgba(46, 160, 67, 0.18);
-  border: 1px solid rgba(46, 160, 67, 0.4);
-  color: #8ce99a;
+  background: rgba(47, 158, 68, 0.12);
+  border: 1px solid rgba(47, 158, 68, 0.28);
+  color: #216e30;
 }
 
 .clue-badge.uninformed {
-  background: rgba(255, 255, 255, 0.04);
+  background: #f3f6fa;
   border: 1px solid var(--line);
   color: var(--muted);
 }
@@ -429,27 +429,27 @@ th {
 }
 
 .badge-yes {
-  background: rgba(46, 160, 67, 0.15);
-  color: #8ce99a;
+  background: rgba(47, 158, 68, 0.12);
+  color: #216e30;
 }
 
 .badge-no {
-  background: rgba(210, 153, 34, 0.15);
-  color: #ffd166;
+  background: rgba(214, 158, 46, 0.16);
+  color: #8a5b07;
 }
 
 .badge-neutral {
-  background: rgba(255, 255, 255, 0.05);
+  background: #f3f6fa;
   color: var(--muted);
 }
 
 /* Row highlighting */
 .row-informed {
-  background: rgba(46, 160, 67, 0.06);
+  background: rgba(47, 158, 68, 0.05);
 }
 
 .row-highlight td {
-  background: rgba(88, 166, 255, 0.06);
+  background: rgba(56, 132, 255, 0.06);
 }
 
 .total-cell {
@@ -467,7 +467,7 @@ th {
 /* Round history chips */
 .round-chip {
   padding: 10px 14px;
-  background: rgba(255, 255, 255, 0.03);
+  background: #f4f7fb;
   border: 1px solid var(--line);
   border-radius: 6px;
   margin-bottom: 8px;
@@ -496,7 +496,7 @@ th {
   padding: 0 14px;
   border-radius: 8px;
   border: 1px solid var(--line);
-  background: #0d1117;
+  background: #ffffff;
   color: var(--text);
   font-size: 0.95rem;
 }
