@@ -105,6 +105,18 @@ function progressText(state) {
   return `Ronda ${state.currentRound + 1} de ${state.totalRounds}`;
 }
 
+function countdownClockText(state) {
+  if (state.phase !== "trading" || !state.tradingEndsAt) {
+    if (state.phase === "resolved") return "00:00";
+    return "Lista";
+  }
+
+  const totalSeconds = Math.max(0, Math.ceil((state.tradingEndsAt - state.serverTime) / 1000));
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+}
+
 function renderRecentTrades(trades, targetId, emptyText = "Sin operaciones aún.") {
   const container = byId(targetId);
   if (!container) return;

@@ -133,6 +133,8 @@ button:not(:disabled):hover {
   font-size: clamp(1.3rem, 2.4vw, 2.4rem);
   line-height: 1.1;
   margin-bottom: 10px;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .stat-grid {
@@ -146,6 +148,7 @@ button:not(:disabled):hover {
   border: 1px solid var(--line);
   border-radius: 8px;
   padding: 14px;
+  min-width: 0;
 }
 
 .stat-label {
@@ -157,6 +160,20 @@ button:not(:disabled):hover {
 .stat-value {
   font-size: clamp(1.25rem, 3vw, 2rem);
   font-weight: 700;
+  line-height: 1.05;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.stat-timer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.stat-value-timer {
+  font-size: clamp(1.6rem, 4vw, 2.9rem);
+  letter-spacing: 0;
 }
 
 .price-value {
@@ -196,6 +213,9 @@ button:not(:disabled):hover {
 .danger {
   min-height: 44px;
   padding: 0 14px;
+  text-align: center;
+  white-space: normal;
+  line-height: 1.15;
 }
 
 .secondary {
@@ -266,6 +286,14 @@ button:not(:disabled):hover {
   gap: 12px;
   padding: 10px 0;
   border-bottom: 1px solid rgba(22, 32, 42, 0.08);
+}
+
+.feed-item span:first-child,
+.history-item span:first-child,
+.simple-item span:first-child {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .feed-item:last-child,

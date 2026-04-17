@@ -53,7 +53,8 @@ function renderScreen(state) {
   setText("screen-timer", countdownText(state));
   setText("screen-phase", labelPhase(state.phase));
   setText("screen-count", String(state.playerCount));
-  setText("screen-progress", progressText(state));
+  setText("screen-progress-label", state.phase === "trading" ? "Tiempo" : "Estado");
+  setText("screen-progress", state.phase === "trading" ? countdownClockText(state) : progressText(state));
 
   renderRecentTrades(state.recentTrades, "screen-trades");
   renderPriceHistory(state.priceHistory, "screen-history");
