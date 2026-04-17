@@ -51,7 +51,7 @@ button:not(:disabled):hover {
 }
 
 .page {
-  width: min(1180px, calc(100vw - 32px));
+  width: min(1240px, calc(100vw - 32px));
   margin: 0 auto;
   padding: 24px 0 48px;
 }

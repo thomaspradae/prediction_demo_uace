@@ -1,7 +1,11 @@
 services:
   - type: web
-    name: marble-market-demo
+    name: prediction-market-demo
     runtime: node
     plan: free
     buildCommand: npm install
     startCommand: npm start
+    healthCheckPath: /healthz
+    envVars:
+      - key: NODE_ENV
+        value: production

@@ -23,14 +23,39 @@ function escapeHtml(value) {
 }
 
 async function requestJson(url, options = {}) {
-  const response = await fetch(url, {
-    headers: { "Content-Type": "application/json" },
-    ...options
-  });
+  const controller = new AbortController();
+  const timeoutMs = options.timeoutMs || 8000;
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
-  const data = await response.json();
+  let response;
+  try {
+    response = await fetch(url, {
+      headers: { "Content-Type": "application/json" },
+      signal: controller.signal,
+      ...options
+    });
+  } catch (err) {
+    clearTimeout(timeoutId);
+    throw new Error(
+      err.name === "AbortError"
+        ? "La solicitud tardó demasiado. Revisa la conexión."
+        : "No se pudo conectar al servidor."
+    );
+  }
+  clearTimeout(timeoutId);
+
+  let data = null;
+  try {
+    data = await response.json();
+  } catch (_err) {
+    if (!response.ok) {
+      throw new Error(`Error ${response.status} del servidor.`);
+    }
+    throw new Error("Respuesta inválida del servidor.");
+  }
+
   if (!response.ok) {
-    throw new Error(data.error || "La solicitud falló.");
+    throw new Error(data.error || `Error ${response.status}.`);
   }
   return data;
 }

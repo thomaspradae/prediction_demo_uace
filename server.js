@@ -35,8 +35,10 @@ function createApp() {
   app.get("/leaderboard", (req, res) => sendPage(res, "leaderboard.html"));
 
   app.get("/healthz", (req, res) => {
-    res.json({ ok: true, phase: game.phase });
+    res.status(200).json({ ok: true, phase: game.phase, players: game.playerOrder.length });
   });
+
+  app.get("/ready", (req, res) => res.status(200).send("ok"));
 
   app.get("/api/state", (req, res) => {
     res.json(buildState(game, req.query.playerId));
@@ -92,14 +94,32 @@ function createApp() {
     res.json(buildState(game));
   });
 
+  app.use((err, req, res, next) => {
+    console.error("Error en servidor:", err);
+    if (res.headersSent) return next(err);
+    res.status(500).json({ error: "Error interno del servidor." });
+  });
+
   return app;
 }
 
+process.on("uncaughtException", (err) => {
+  console.error("uncaughtException:", err);
+});
+
+process.on("unhandledRejection", (reason) => {
+  console.error("unhandledRejection:", reason);
+});
+
 function startServer(port = Number(process.env.PORT) || 3000) {
   const app = createApp();
-  return app.listen(port, () => {
-    console.log(`Mercado de Predicción escuchando en http://localhost:${port}`);
+  const host = "0.0.0.0";
+  const server = app.listen(port, host, () => {
+    console.log(`Mercado de Predicción escuchando en ${host}:${port}`);
   });
+  server.keepAliveTimeout = 120000;
+  server.headersTimeout = 125000;
+  return server;
 }
 
 if (require.main === module) {
