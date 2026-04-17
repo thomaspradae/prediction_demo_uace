@@ -3,41 +3,41 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Mercado de Canicas</title>
+    <title>Mercado de Predicción</title>
     <link rel="stylesheet" href="/styles.css">
   </head>
   <body>
     <main class="page phone-page">
       <div class="topbar">
-        <div class="brand">Mercado de Canicas</div>
+        <div class="brand">Mercado de Predicción</div>
         <nav class="toplinks">
-          <a href="/results">Resultados</a>
+          <a href="/leaderboard">Leaderboard</a>
         </nav>
       </div>
 
       <div class="grid join-grid">
         <section class="panel">
-          <p class="pill">Juego compartido de probabilidad</p>
-          <h1 class="headline">Opera la estimación del grupo.</h1>
+          <p class="pill">Juego interactivo de predicción</p>
+          <h1 class="headline">¿Quién predice mejor?</h1>
           <p class="subtle">
-            Únete a la ronda, mira cómo se mueve el precio público y descubre
-            quién realmente mejoró el pronóstico con su información.
+            5 rondas con escenarios reales. Algunos jugadores recibirán
+            información privilegiada. Vota SÍ o NO y veamos si la información
+            mueve el mercado hacia la verdad.
           </p>
         </section>
 
         <section class="panel">
-          <h2>Únete a esta ronda</h2>
+          <h2>Únete al juego</h2>
           <form id="join-form" class="field">
             <label for="name-input">Tu nombre</label>
-            <input id="name-input" name="name" maxlength="24" autocomplete="name" placeholder="Ada">
+            <input id="name-input" name="name" maxlength="24" autocomplete="name" placeholder="Tu nombre">
             <button class="secondary full" type="submit">Unirse al juego</button>
           </form>
-          <p class="join-note">La pantalla del proyector se abre por separado en el dispositivo del moderador.</p>
           <div id="join-message" class="banner" hidden></div>
         </section>
 
         <section class="panel">
-          <h2>Sala</h2>
+          <h2>Sala de espera</h2>
           <div class="stat-grid">
             <div class="stat">
               <div class="stat-label">Fase</div>
@@ -48,10 +48,21 @@
               <div id="join-count" class="stat-value">0</div>
             </div>
             <div class="stat">
-              <div class="stat-label">Precio del mercado</div>
-              <div id="join-price" class="stat-value">50%</div>
+              <div class="stat-label">Rondas</div>
+              <div id="join-rounds" class="stat-value">5</div>
             </div>
           </div>
+        </section>
+
+        <section class="panel">
+          <h2>Cómo funciona</h2>
+          <ol class="how-list">
+            <li>Te unes y esperas a que el moderador inicie cada ronda.</li>
+            <li>Cada ronda plantea un escenario. Algunos jugadores reciben información privilegiada.</li>
+            <li>Votas SÍ o NO. Cada voto mueve el precio del mercado.</li>
+            <li>Se revela la respuesta correcta y se calculan ganancias.</li>
+            <li>¡El leaderboard acumula tu puntaje ronda a ronda!</li>
+          </ol>
         </section>
       </div>
     </main>

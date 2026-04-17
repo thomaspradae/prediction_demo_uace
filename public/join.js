@@ -6,7 +6,11 @@ async function refreshLobby() {
     const state = await getState();
     setText("join-phase", labelPhase(state.phase));
     setText("join-count", String(state.playerCount));
-    setText("join-price", `${state.impliedProbability}%`);
+    setText("join-rounds", String(state.totalRounds));
+
+    if (state.phase !== "join") {
+      joinForm.querySelector("button").disabled = true;
+    }
   } catch (error) {
     showMessage("join-message", error.message);
   }

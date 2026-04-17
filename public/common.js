@@ -45,41 +45,39 @@ function byId(id) {
 }
 
 function setText(id, value) {
-  const element = byId(id);
-  if (element) {
-    element.textContent = value;
-  }
+  const el = byId(id);
+  if (el) el.textContent = value;
 }
 
 function setHtml(id, value) {
-  const element = byId(id);
-  if (element) {
-    element.innerHTML = value;
-  }
+  const el = byId(id);
+  if (el) el.innerHTML = value;
 }
 
 function showMessage(id, text, tone = "error") {
-  const element = byId(id);
-  if (!element) {
-    return;
-  }
-  element.textContent = text;
-  element.className = `banner ${tone}`;
-  element.hidden = false;
+  const el = byId(id);
+  if (!el) return;
+  el.textContent = text;
+  el.className = `banner ${tone}`;
+  el.hidden = false;
 }
 
 function clearMessage(id) {
-  const element = byId(id);
-  if (!element) {
-    return;
-  }
-  element.hidden = true;
-  element.textContent = "";
-  element.className = "banner";
+  const el = byId(id);
+  if (!el) return;
+  el.hidden = true;
+  el.textContent = "";
+  el.className = "banner";
 }
 
 function money(value) {
   return `$${Number(value || 0).toFixed(2)}`;
+}
+
+function signedMoney(value) {
+  const n = Number(value || 0);
+  const prefix = n >= 0 ? "+" : "";
+  return `${prefix}$${n.toFixed(2)}`;
 }
 
 function sideClass(side) {
@@ -91,23 +89,25 @@ function labelSide(side) {
 }
 
 function labelPhase(phase) {
-  if (phase === "join") {
-    return "Sala";
-  }
-  if (phase === "trading") {
-    return "Operando";
-  }
-  if (phase === "resolved") {
-    return "Resuelta";
-  }
+  if (phase === "join") return "Sala";
+  if (phase === "trading") return "Operando";
+  if (phase === "resolved") return "Resuelta";
   return phase;
 }
 
-function renderRecentTrades(trades, targetId, emptyText = "Todavía no hay operaciones.") {
+function roundLabel(state) {
+  if (!state.scenario) return "—";
+  return state.scenario.label;
+}
+
+function progressText(state) {
+  if (state.currentRound < 0) return "Sin empezar";
+  return `Ronda ${state.currentRound + 1} de ${state.totalRounds}`;
+}
+
+function renderRecentTrades(trades, targetId, emptyText = "Sin operaciones aún.") {
   const container = byId(targetId);
-  if (!container) {
-    return;
-  }
+  if (!container) return;
 
   if (!trades.length) {
     container.innerHTML = `<li class="simple-item muted">${emptyText}</li>`;
@@ -116,24 +116,21 @@ function renderRecentTrades(trades, targetId, emptyText = "Todavía no hay opera
 
   container.innerHTML = trades
     .map(
-      (trade) => `
+      (t) => `
         <li class="feed-item">
-          <span class="${sideClass(trade.side)}">${escapeHtml(trade.label)}</span>
-          <span class="feed-time">${trade.atLabel}</span>
-        </li>
-      `
+          <span class="${sideClass(t.side)}">${escapeHtml(t.label)}</span>
+          <span class="feed-time">${t.atLabel}</span>
+        </li>`
     )
     .join("");
 }
 
-function renderPriceHistory(history, targetId, emptyText = "El historial de precio aparecerá aquí.") {
+function renderPriceHistory(history, targetId) {
   const container = byId(targetId);
-  if (!container) {
-    return;
-  }
+  if (!container) return;
 
   if (!history.length) {
-    container.innerHTML = `<li class="simple-item muted">${emptyText}</li>`;
+    container.innerHTML = '<li class="simple-item muted">El historial aparecerá aquí.</li>';
     return;
   }
 
@@ -141,21 +138,18 @@ function renderPriceHistory(history, targetId, emptyText = "El historial de prec
     .slice()
     .reverse()
     .map(
-      (point) => `
+      (p) => `
         <li class="history-item">
-          <span>${escapeHtml(point.label)}</span>
-          <span class="history-time">${point.atLabel}</span>
-        </li>
-      `
+          <span>${escapeHtml(p.label)}</span>
+          <span class="history-time">${p.atLabel}</span>
+        </li>`
     )
     .join("");
 }
 
 function drawChart(canvasId, history) {
   const canvas = byId(canvasId);
-  if (!canvas) {
-    return;
-  }
+  if (!canvas) return;
 
   const dpr = window.devicePixelRatio || 1;
   const width = canvas.clientWidth || 300;
@@ -164,70 +158,61 @@ function drawChart(canvasId, history) {
   canvas.width = Math.floor(width * dpr);
   canvas.height = Math.floor(height * dpr);
 
-  const context = canvas.getContext("2d");
-  context.scale(dpr, dpr);
-  context.clearRect(0, 0, width, height);
+  const ctx = canvas.getContext("2d");
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, width, height);
 
-  context.fillStyle = "rgba(255,255,255,0.02)";
-  context.fillRect(0, 0, width, height);
+  ctx.fillStyle = "rgba(255,255,255,0.02)";
+  ctx.fillRect(0, 0, width, height);
 
-  const padding = 18;
-  const chartWidth = width - padding * 2;
-  const chartHeight = height - padding * 2;
+  const pad = 18;
+  const cw = width - pad * 2;
+  const ch = height - pad * 2;
 
-  context.strokeStyle = "rgba(255,255,255,0.08)";
-  context.lineWidth = 1;
+  ctx.strokeStyle = "rgba(255,255,255,0.08)";
+  ctx.lineWidth = 1;
   for (const y of [0.25, 0.5, 0.75]) {
-    const yPos = padding + chartHeight * y;
-    context.beginPath();
-    context.moveTo(padding, yPos);
-    context.lineTo(width - padding, yPos);
-    context.stroke();
+    const yPos = pad + ch * y;
+    ctx.beginPath();
+    ctx.moveTo(pad, yPos);
+    ctx.lineTo(width - pad, yPos);
+    ctx.stroke();
   }
 
   if (!history.length) {
-    context.fillStyle = "#9ba7b4";
-    context.font = "14px sans-serif";
-    context.fillText("Esperando datos de precio", padding, height / 2);
+    ctx.fillStyle = "#9ba7b4";
+    ctx.font = "14px sans-serif";
+    ctx.fillText("Esperando datos de precio", pad, height / 2);
     return;
   }
 
-  context.strokeStyle = "#58a6ff";
-  context.lineWidth = 3;
-  context.beginPath();
+  ctx.strokeStyle = "#58a6ff";
+  ctx.lineWidth = 3;
+  ctx.beginPath();
 
-  history.forEach((point, index) => {
+  history.forEach((point, i) => {
     const x =
-      history.length === 1
-        ? padding + chartWidth / 2
-        : padding + (chartWidth * index) / (history.length - 1);
-    const y = padding + chartHeight * (1 - point.value);
-    if (index === 0) {
-      context.moveTo(x, y);
-    } else {
-      context.lineTo(x, y);
-    }
+      history.length === 1 ? pad + cw / 2 : pad + (cw * i) / (history.length - 1);
+    const y = pad + ch * (1 - point.value);
+    if (i === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
   });
-  context.stroke();
+  ctx.stroke();
 
   const last = history[history.length - 1];
-  const lastX =
-    history.length === 1
-      ? padding + chartWidth / 2
-      : padding + chartWidth;
-  const lastY = padding + chartHeight * (1 - last.value);
+  const lastX = history.length === 1 ? pad + cw / 2 : pad + cw;
+  const lastY = pad + ch * (1 - last.value);
 
-  context.fillStyle = "#58a6ff";
-  context.beginPath();
-  context.arc(lastX, lastY, 5, 0, Math.PI * 2);
-  context.fill();
+  ctx.fillStyle = "#58a6ff";
+  ctx.beginPath();
+  ctx.arc(lastX, lastY, 5, 0, Math.PI * 2);
+  ctx.fill();
 }
 
 function countdownText(state) {
   if (state.phase !== "trading" || !state.tradingEndsAt) {
     return state.phase === "resolved" ? "Ronda resuelta" : "Esperando a empezar";
   }
-
   const msLeft = Math.max(0, state.tradingEndsAt - state.serverTime);
   return `${Math.ceil(msLeft / 1000)} segundos restantes`;
 }

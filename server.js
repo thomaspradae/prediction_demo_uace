@@ -3,7 +3,7 @@ const express = require("express");
 const {
   DEFAULT_ROUND_SECONDS,
   createEmptyGame,
-  cloneForReset,
+  resetGame,
   joinGame,
   startRound,
   trade,
@@ -28,77 +28,68 @@ function createApp() {
   app.use(express.json());
   app.use(express.static(publicDir));
 
-  app.get("/", (request, response) => {
-    sendPage(response, "index.html");
+  app.get("/", (req, res) => sendPage(res, "index.html"));
+  app.get("/play", (req, res) => sendPage(res, "play.html"));
+  app.get("/screen", (req, res) => sendPage(res, "screen.html"));
+  app.get("/results", (req, res) => sendPage(res, "results.html"));
+  app.get("/leaderboard", (req, res) => sendPage(res, "leaderboard.html"));
+
+  app.get("/healthz", (req, res) => {
+    res.json({ ok: true, phase: game.phase });
   });
 
-  app.get("/play", (request, response) => {
-    sendPage(response, "play.html");
+  app.get("/api/state", (req, res) => {
+    res.json(buildState(game, req.query.playerId));
   });
 
-  app.get("/screen", (request, response) => {
-    sendPage(response, "screen.html");
-  });
-
-  app.get("/results", (request, response) => {
-    sendPage(response, "results.html");
-  });
-
-  app.get("/healthz", (request, response) => {
-    response.json({ ok: true, phase: game.phase });
-  });
-
-  app.get("/api/state", (request, response) => {
-    response.json(buildState(game, request.query.playerId));
-  });
-
-  app.post("/api/join", (request, response) => {
+  app.post("/api/join", (req, res) => {
     try {
-      const player = joinGame(game, request.body?.name);
-      response.json({
+      const player = joinGame(game, req.body?.name);
+      res.json({
         playerId: player.id,
         playerName: player.name,
         state: buildState(game, player.id)
       });
     } catch (error) {
-      sendError(response, error);
+      sendError(res, error);
     }
   });
 
-  app.post("/api/start", (request, response) => {
+  app.post("/api/start", (req, res) => {
     try {
-      const roundSeconds = Number(request.body?.roundSeconds) || DEFAULT_ROUND_SECONDS;
+      const roundSeconds =
+        Number(req.body?.roundSeconds) || DEFAULT_ROUND_SECONDS;
       startRound(game, roundSeconds);
-      response.json(buildState(game));
+      res.json(buildState(game));
     } catch (error) {
-      sendError(response, error);
+      sendError(res, error);
     }
   });
 
-  app.post("/api/trade", (request, response) => {
+  app.post("/api/trade", (req, res) => {
     try {
-      const tradeRecord = trade(game, request.body?.playerId, request.body?.side);
-      response.json({
+      const tradeRecord = trade(game, req.body?.playerId, req.body?.side);
+      res.json({
         trade: tradeRecord,
-        state: buildState(game, request.body?.playerId)
+        state: buildState(game, req.body?.playerId)
       });
     } catch (error) {
-      sendError(response, error);
+      sendError(res, error);
     }
   });
 
-  app.post("/api/resolve", (request, response) => {
+  app.post("/api/resolve", (req, res) => {
     try {
       resolveRound(game);
-      response.json(buildState(game));
+      res.json(buildState(game));
     } catch (error) {
-      sendError(response, error);
+      sendError(res, error);
     }
   });
 
-  app.post("/api/reset", (request, response) => {
-    game = cloneForReset(game);
-    response.json(buildState(game));
+  app.post("/api/reset", (req, res) => {
+    game = resetGame();
+    res.json(buildState(game));
   });
 
   return app;
@@ -107,7 +98,7 @@ function createApp() {
 function startServer(port = Number(process.env.PORT) || 3000) {
   const app = createApp();
   return app.listen(port, () => {
-    console.log(`Demo del mercado de predicción escuchando en http://localhost:${port}`);
+    console.log(`Mercado de Predicción escuchando en http://localhost:${port}`);
   });
 }
 

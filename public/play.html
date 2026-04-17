@@ -3,30 +3,31 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Jugar | Mercado de Canicas</title>
+    <title>Jugar | Mercado de Predicción</title>
     <link rel="stylesheet" href="/styles.css">
   </head>
   <body>
     <main class="page phone-page">
       <div class="topbar">
-        <div class="brand">Mercado de Canicas</div>
+        <div class="brand">Mercado de Predicción</div>
         <nav class="toplinks">
-          <a href="/">Unirse</a>
-          <a href="/results">Resultados</a>
+          <a href="/leaderboard">Leaderboard</a>
         </nav>
       </div>
 
       <div class="grid play-grid">
         <section class="panel">
-          <p class="pill" id="player-role-pill">Esperando tu rol</p>
-          <h1 class="question" id="player-question">¿La canica final será ROJA?</h1>
+          <p class="pill" id="round-label">Esperando</p>
+          <h1 class="question" id="player-question">Esperando la primera ronda...</h1>
+          <p id="scenario-context" class="subtle"></p>
           <p id="player-name" class="subtle"></p>
           <div id="play-message" class="banner" hidden></div>
         </section>
 
-        <section class="panel">
-          <h2>Pista privada</h2>
+        <section class="panel" id="clue-section">
+          <h2>Tu información</h2>
           <p id="player-clue" class="subtle">Esperando a que empiece la ronda.</p>
+          <div id="clue-badge" class="clue-badge" hidden></div>
         </section>
 
         <section class="panel">
@@ -37,33 +38,33 @@
               <div id="player-cash" class="stat-value">$100.00</div>
             </div>
             <div class="stat">
-              <div class="stat-label">Acciones SÍ</div>
+              <div class="stat-label">Votos SÍ</div>
               <div id="player-yes" class="stat-value">0</div>
             </div>
             <div class="stat">
-              <div class="stat-label">Acciones NO</div>
+              <div class="stat-label">Votos NO</div>
               <div id="player-no" class="stat-value">0</div>
             </div>
           </div>
         </section>
 
         <section class="panel">
-          <h2>Mercado compartido</h2>
+          <h2>Precio del mercado</h2>
           <div class="price-value" id="player-price">$0.50</div>
           <div class="probability" id="player-probability">Probabilidad implícita = 50%</div>
           <p class="subtle" id="player-timer">Esperando a empezar</p>
         </section>
 
         <section class="panel">
-          <h2>Operar</h2>
+          <h2>Votar</h2>
           <div class="button-row">
-            <button id="buy-yes" class="action action-yes" type="button">Comprar SÍ</button>
-            <button id="buy-no" class="action action-no" type="button">Comprar NO</button>
+            <button id="buy-yes" class="action action-yes" type="button" disabled>Votar SÍ</button>
+            <button id="buy-no" class="action action-no" type="button" disabled>Votar NO</button>
           </div>
         </section>
 
         <section class="panel">
-          <h2>Operaciones recientes</h2>
+          <h2>Actividad reciente</h2>
           <ul id="player-trades" class="feed-list"></ul>
         </section>
       </div>

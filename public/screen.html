@@ -3,30 +3,32 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Pantalla | Mercado de Canicas</title>
+    <title>Pantalla | Mercado de Predicción</title>
     <link rel="stylesheet" href="/styles.css">
   </head>
   <body>
     <main class="page">
       <div class="topbar">
-        <div class="brand">Mercado de Canicas</div>
+        <div class="brand">Mercado de Predicción</div>
         <nav class="toplinks">
           <a href="/">Unirse</a>
           <a href="/results">Resultados</a>
+          <a href="/leaderboard">Leaderboard</a>
         </nav>
       </div>
 
       <div class="grid screen-grid">
         <section class="panel screen-col-7">
-          <p class="pill">Mercado compartido</p>
-          <h1 class="question" id="screen-question">¿La canica final será ROJA?</h1>
+          <p class="pill" id="screen-round-label">Esperando</p>
+          <h1 class="question" id="screen-question">Esperando primera ronda...</h1>
+          <p id="screen-context" class="subtle"></p>
           <div class="price-value" id="screen-price">$0.50</div>
           <div class="probability" id="screen-probability">Probabilidad implícita = 50%</div>
           <p class="subtle" id="screen-timer">Esperando a empezar</p>
         </section>
 
         <section class="panel screen-col-5">
-          <h2>Control de ronda</h2>
+          <h2>Control del moderador</h2>
           <div class="stat-grid">
             <div class="stat">
               <div class="stat-label">Fase</div>
@@ -37,16 +39,16 @@
               <div id="screen-count" class="stat-value">0</div>
             </div>
             <div class="stat">
-              <div class="stat-label">Ronda</div>
-              <div id="screen-round" class="stat-value">1</div>
+              <div class="stat-label">Progreso</div>
+              <div id="screen-progress" class="stat-value">—</div>
             </div>
           </div>
-          <div class="button-row" style="margin-top: 14px;">
-            <button id="start-round" class="secondary" type="button">Empezar ronda de 2 min</button>
+          <div class="button-row" style="margin-top:14px">
+            <button id="start-round" class="secondary" type="button">Empezar ronda</button>
             <button id="resolve-round" class="secondary" type="button">Resolver ahora</button>
           </div>
-          <button id="reset-game" class="danger full" type="button" style="margin-top: 12px;">Reiniciar juego</button>
-          <div id="screen-message" class="banner" hidden style="margin-top: 12px;"></div>
+          <button id="reset-game" class="danger full" type="button" style="margin-top:12px">Reiniciar todo el juego</button>
+          <div id="screen-message" class="banner" hidden style="margin-top:12px"></div>
         </section>
 
         <section class="panel screen-col-8">
@@ -54,13 +56,13 @@
           <div class="canvas-wrap">
             <canvas id="price-chart"></canvas>
           </div>
-          <div class="history-list" style="margin-top: 14px;">
+          <div class="history-list" style="margin-top:14px">
             <ul id="screen-history" class="history-list"></ul>
           </div>
         </section>
 
         <section class="panel screen-col-4">
-          <h2>Operaciones recientes</h2>
+          <h2>Actividad reciente</h2>
           <div class="feed">
             <ul id="screen-trades" class="feed-list"></ul>
           </div>
@@ -71,6 +73,11 @@
           <div id="resolution-banner" class="banner">
             El resultado aparecerá aquí cuando se resuelva la ronda.
           </div>
+        </section>
+
+        <section class="panel screen-col-12" id="upcoming-section" hidden>
+          <h2>Próxima ronda</h2>
+          <p id="upcoming-label" class="subtle"></p>
         </section>
       </div>
     </main>

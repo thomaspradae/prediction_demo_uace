@@ -34,10 +34,34 @@ function renderPlayerState(state) {
   }
 
   const player = state.player;
-  setText("player-question", state.question);
+  const scenario = state.scenario;
+
+  if (scenario) {
+    setText("round-label", scenario.label);
+    setText("player-question", scenario.question);
+    setText("scenario-context", scenario.context);
+  } else {
+    setText("round-label", "Esperando");
+    setText("player-question", "Esperando la primera ronda...");
+    setText("scenario-context", "");
+  }
+
   setText("player-name", player.name);
-  setText("player-role-pill", player.informed ? "Pista privada activa" : "Sin pista privada");
-  setText("player-clue", state.phase === "join" ? "Esperando a que empiece la ronda." : player.clueText);
+
+  if (state.phase === "join") {
+    setText("player-clue", "Esperando a que el moderador inicie la ronda.");
+    const badge = byId("clue-badge");
+    if (badge) badge.hidden = true;
+  } else {
+    setText("player-clue", player.clueText);
+    const badge = byId("clue-badge");
+    if (badge) {
+      badge.hidden = false;
+      badge.textContent = player.informed ? "TIENES INFO PRIVILEGIADA" : "SIN INFO PRIVILEGIADA";
+      badge.className = player.informed ? "clue-badge informed" : "clue-badge uninformed";
+    }
+  }
+
   setText("player-cash", money(player.cash));
   setText("player-yes", String(player.yesShares));
   setText("player-no", String(player.noShares));
@@ -50,12 +74,11 @@ function renderPlayerState(state) {
   buyYesButton.disabled = !canTradeNow;
   buyNoButton.disabled = !canTradeNow;
 
-  if (state.phase === "resolved") {
-    showMessage(
-      "play-message",
-      `Ronda resuelta: ${labelSide(state.finalOutcome)}. Revisa la página de resultados para ver ganancias y quién movió el precio hacia la verdad.`,
-      "success"
-    );
+  if (state.phase === "resolved" && state.finalOutcome) {
+    const msg = state.isGameOver
+      ? `¡Juego terminado! Resultado de esta ronda: ${labelSide(state.finalOutcome)}. Ve al Leaderboard para ver las posiciones finales.`
+      : `Ronda resuelta: ${labelSide(state.finalOutcome)}. Espera a que el moderador inicie la siguiente ronda.`;
+    showMessage("play-message", msg, "success");
   }
 }
 

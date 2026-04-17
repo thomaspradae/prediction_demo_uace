@@ -3,46 +3,47 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Resultados | Mercado de Canicas</title>
+    <title>Resultados | Mercado de Predicción</title>
     <link rel="stylesheet" href="/styles.css">
   </head>
   <body>
     <main class="page">
       <div class="topbar">
-        <div class="brand">Mercado de Canicas</div>
+        <div class="brand">Mercado de Predicción</div>
         <nav class="toplinks">
           <a href="/">Unirse</a>
           <a href="/play">Jugar</a>
+          <a href="/leaderboard">Leaderboard</a>
         </nav>
       </div>
 
       <div class="grid results-grid">
         <section class="panel results-col-12">
-          <p class="pill">Resultados de la ronda</p>
+          <p class="pill" id="results-round-label">Resultados de la ronda</p>
           <h1 class="headline" id="results-outcome">Esperando una ronda resuelta</h1>
-          <p class="subtle" id="results-summary">Termina una ronda para comparar jugadores y ganancias.</p>
+          <p class="subtle" id="results-summary">Resuelve una ronda para ver el análisis.</p>
         </section>
 
         <section class="panel results-col-6">
-          <h2>Resultados del mercado</h2>
+          <h2>Resultado del mercado</h2>
           <div class="stat-grid">
             <div class="stat">
-              <div class="stat-label">Resultado final</div>
-              <div id="results-final-outcome" class="stat-value">-</div>
+              <div class="stat-label">Respuesta correcta</div>
+              <div id="results-correct" class="stat-value">-</div>
             </div>
             <div class="stat">
-              <div class="stat-label">Precio final del mercado</div>
+              <div class="stat-label">Precio final</div>
               <div id="results-final-price" class="stat-value">-</div>
             </div>
             <div class="stat">
-              <div class="stat-label">Sesgo oculto de la bolsa</div>
-              <div id="results-bias" class="stat-value">-</div>
+              <div class="stat-label">Ronda</div>
+              <div id="results-round-num" class="stat-value">-</div>
             </div>
           </div>
         </section>
 
         <section class="panel results-col-6">
-          <h2>Comparación por grupos</h2>
+          <h2>Informados vs No informados</h2>
           <div class="stat-grid">
             <div class="stat">
               <div class="stat-label">Ganancia prom. informados</div>
@@ -53,14 +54,38 @@
               <div id="results-uninformed-profit" class="stat-value">-</div>
             </div>
             <div class="stat">
-              <div class="stat-label">Operaciones hacia la verdad</div>
+              <div class="stat-label">% votos hacia la verdad</div>
               <div id="results-toward-truth" class="stat-value">-</div>
             </div>
           </div>
         </section>
 
         <section class="panel results-col-12">
-          <h2>Tabla de posiciones</h2>
+          <h2>Jugadores informados — ¿Votaron hacia la verdad?</h2>
+          <p class="subtle">Estos jugadores tenían información privilegiada esta ronda.</p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Votos</th>
+                  <th>Hacia la verdad</th>
+                  <th>Lejos de la verdad</th>
+                  <th>Dirección</th>
+                  <th>Ganancia</th>
+                </tr>
+              </thead>
+              <tbody id="informed-body">
+                <tr>
+                  <td colspan="6" class="center muted">Sin datos aún.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="panel results-col-12">
+          <h2>Tabla completa de la ronda</h2>
           <div class="table-wrap">
             <table>
               <thead>
@@ -68,15 +93,15 @@
                   <th>#</th>
                   <th>Nombre</th>
                   <th>Rol</th>
-                  <th>Resumen de acciones</th>
-                  <th>¿Empujó el mercado hacia la verdad?</th>
+                  <th>Votos</th>
+                  <th>Dirección</th>
                   <th>Riqueza final</th>
                   <th>Ganancia</th>
                 </tr>
               </thead>
               <tbody id="results-body">
                 <tr>
-                  <td colspan="7" class="center muted">Todavía no hay resultados.</td>
+                  <td colspan="7" class="center muted">Sin resultados aún.</td>
                 </tr>
               </tbody>
             </table>

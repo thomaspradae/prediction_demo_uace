@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Leaderboard | Mercado de Predicción</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <main class="page">
+      <div class="topbar">
+        <div class="brand">Mercado de Predicción</div>
+        <nav class="toplinks">
+          <a href="/">Unirse</a>
+          <a href="/play">Jugar</a>
+          <a href="/results">Resultados</a>
+        </nav>
+      </div>
+
+      <div class="grid results-grid">
+        <section class="panel results-col-12">
+          <p class="pill">Leaderboard acumulado</p>
+          <h1 class="headline" id="lb-title">Posiciones generales</h1>
+          <p class="subtle" id="lb-subtitle">Ganancia acumulada a lo largo de todas las rondas jugadas.</p>
+        </section>
+
+        <section class="panel results-col-12">
+          <div class="search-bar">
+            <label for="search-input">Buscar jugador</label>
+            <input id="search-input" type="text" placeholder="Escribe un nombre..." maxlength="24">
+          </div>
+        </section>
+
+        <section class="panel results-col-12">
+          <h2>Historial de rondas</h2>
+          <div id="round-history-summary" class="subtle">Sin rondas completadas aún.</div>
+        </section>
+
+        <section class="panel results-col-12">
+          <h2>Clasificación general</h2>
+          <div class="table-wrap">
+            <table>
+              <thead id="lb-head">
+                <tr>
+                  <th>#</th>
+                  <th>Nombre</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+              <tbody id="lb-body">
+                <tr>
+                  <td colspan="3" class="center muted">Sin datos aún. Completa al menos una ronda.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <script src="/common.js"></script>
+    <script src="/leaderboard.js"></script>
+  </body>
+</html>
