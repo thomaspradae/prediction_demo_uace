@@ -55,7 +55,11 @@ async function requestJson(url, options = {}) {
   }
 
   if (!response.ok) {
-    throw new Error(data.error || `Error ${response.status}.`);
+    const err = new Error(data.error || `Error ${response.status}.`);
+    err.status = response.status;
+    err.code = data.code;
+    err.remainMs = data.remainMs;
+    throw err;
   }
   return data;
 }

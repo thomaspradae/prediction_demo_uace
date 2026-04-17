@@ -1,6 +1,10 @@
 const startButton = byId("start-round");
 const resolveButton = byId("resolve-round");
 const resetButton = byId("reset-game");
+const outcomeModal = byId("outcome-modal");
+const closeOutcomeButton = byId("close-outcome-modal");
+
+let shownResolutionKey = null;
 
 async function controlRound(path, body = {}) {
   clearMessage("screen-message");
@@ -35,6 +39,59 @@ function renderResolution(state) {
   `;
 }
 
+function closeOutcomeModal() {
+  if (!outcomeModal) return;
+  outcomeModal.hidden = true;
+  document.body.classList.remove("modal-open");
+}
+
+function openOutcomeModal(state) {
+  if (!outcomeModal || state.phase !== "resolved" || !state.finalOutcome) return;
+
+  const scenario = state.scenario;
+  const outcomeText = labelSide(state.finalOutcome);
+  const title = byId("outcome-modal-title");
+
+  if (title) {
+    title.textContent = outcomeText;
+    title.className = `modal-outcome ${
+      state.finalOutcome === "YES" ? "modal-outcome-yes" : "modal-outcome-no"
+    }`;
+  }
+
+  setText(
+    "outcome-modal-summary",
+    state.isGameOver
+      ? "Esta fue la última ronda del juego."
+      : "La ronda ya se resolvió. Ya puedes anunciar el resultado final."
+  );
+  setText("outcome-modal-price", `${state.impliedProbability}%`);
+  setText("outcome-modal-round", scenario ? scenario.label : `Ronda ${state.currentRound + 1}`);
+  setText("outcome-modal-question", scenario ? scenario.question : "");
+
+  outcomeModal.hidden = false;
+  document.body.classList.add("modal-open");
+}
+
+function syncOutcomeModal(state) {
+  if (state.phase === "join" && state.currentRound < 0) {
+    shownResolutionKey = null;
+    closeOutcomeModal();
+    return;
+  }
+
+  if (state.phase !== "resolved" || !state.finalOutcome) {
+    closeOutcomeModal();
+    return;
+  }
+
+  const resolutionKey = `${state.currentRound}:${state.finalOutcome}`;
+  if (resolutionKey !== shownResolutionKey) {
+    shownResolutionKey = resolutionKey;
+    openOutcomeModal(state);
+  }
+}
+
 function renderScreen(state) {
   const scenario = state.scenario;
 
@@ -60,6 +117,7 @@ function renderScreen(state) {
   renderPriceHistory(state.priceHistory, "screen-history");
   drawChart("price-chart", state.priceHistory);
   renderResolution(state);
+  syncOutcomeModal(state);
 
   const canStart = state.phase === "join" || (state.phase === "resolved" && !state.isGameOver);
   startButton.disabled = !canStart;
@@ -103,6 +161,24 @@ resolveButton.addEventListener("click", () => controlRound("/api/resolve"));
 resetButton.addEventListener("click", () => {
   if (confirm("¿Reiniciar todo el juego? Se pierden todos los datos.")) {
     controlRound("/api/reset");
+  }
+});
+
+if (closeOutcomeButton) {
+  closeOutcomeButton.addEventListener("click", closeOutcomeModal);
+}
+
+if (outcomeModal) {
+  outcomeModal.addEventListener("click", (event) => {
+    if (event.target === outcomeModal) {
+      closeOutcomeModal();
+    }
+  });
+}
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && outcomeModal && !outcomeModal.hidden) {
+    closeOutcomeModal();
   }
 });
 

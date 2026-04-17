@@ -3,14 +3,71 @@ const buyYesButton = byId("buy-yes");
 const buyNoButton = byId("buy-no");
 
 let latestState = null;
+let cooldownUntil = 0;
+let cooldownTimerHandle = null;
+
+function updateButtonLabels() {
+  const now = Date.now();
+  const remainMs = cooldownUntil - now;
+  const canTradeNow = latestState && latestState.phase === "trading";
+
+  if (!canTradeNow) {
+    buyYesButton.disabled = true;
+    buyNoButton.disabled = true;
+    buyYesButton.textContent = "Votar SÍ";
+    buyNoButton.textContent = "Votar NO";
+    return;
+  }
+
+  if (remainMs > 0) {
+    const secs = (remainMs / 1000).toFixed(1);
+    buyYesButton.disabled = true;
+    buyNoButton.disabled = true;
+    buyYesButton.textContent = `Espera ${secs}s`;
+    buyNoButton.textContent = `Espera ${secs}s`;
+  } else {
+    buyYesButton.disabled = false;
+    buyNoButton.disabled = false;
+    buyYesButton.textContent = "Votar SÍ";
+    buyNoButton.textContent = "Votar NO";
+  }
+}
+
+function startCooldownTicker() {
+  if (cooldownTimerHandle) return;
+  cooldownTimerHandle = setInterval(() => {
+    updateButtonLabels();
+    if (Date.now() >= cooldownUntil) {
+      clearInterval(cooldownTimerHandle);
+      cooldownTimerHandle = null;
+    }
+  }, 100);
+}
+
+function setCooldown(ms) {
+  const target = Date.now() + Math.max(0, ms);
+  if (target > cooldownUntil) {
+    cooldownUntil = target;
+  }
+  updateButtonLabels();
+  startCooldownTicker();
+}
 
 async function doTrade(side) {
   if (!playerId) {
     window.location.href = "/";
     return;
   }
+  if (Date.now() < cooldownUntil) return;
 
   clearMessage("play-message");
+
+  // Optimistically start cooldown so double-taps can't spam
+  const optimisticCooldown =
+    latestState && latestState.tradeCooldownMs
+      ? latestState.tradeCooldownMs
+      : 1500;
+  setCooldown(optimisticCooldown);
 
   try {
     const response = await requestJson("/api/trade", {
@@ -20,7 +77,16 @@ async function doTrade(side) {
     latestState = response.state;
     renderPlayerState(response.state);
   } catch (error) {
-    showMessage("play-message", error.message);
+    if (error.status === 429 || error.code === "COOLDOWN" || error.code === "IP_RATE_LIMIT") {
+      if (typeof error.remainMs === "number" && error.remainMs > 0) {
+        setCooldown(error.remainMs);
+      }
+      showMessage("play-message", error.message, "error");
+    } else {
+      cooldownUntil = 0;
+      updateButtonLabels();
+      showMessage("play-message", error.message);
+    }
   }
 }
 
@@ -57,8 +123,12 @@ function renderPlayerState(state) {
     const badge = byId("clue-badge");
     if (badge) {
       badge.hidden = false;
-      badge.textContent = player.informed ? "TIENES INFO PRIVILEGIADA" : "SIN INFO PRIVILEGIADA";
-      badge.className = player.informed ? "clue-badge informed" : "clue-badge uninformed";
+      badge.textContent = player.informed
+        ? "TIENES INFO PRIVILEGIADA"
+        : "SIN INFO PRIVILEGIADA";
+      badge.className = player.informed
+        ? "clue-badge informed"
+        : "clue-badge uninformed";
     }
   }
 
@@ -66,13 +136,21 @@ function renderPlayerState(state) {
   setText("player-yes", String(player.yesShares));
   setText("player-no", String(player.noShares));
   setText("player-price", `$${state.price.toFixed(2)}`);
-  setText("player-probability", `Probabilidad implícita = ${state.impliedProbability}%`);
+  setText(
+    "player-probability",
+    `Probabilidad implícita = ${state.impliedProbability}%`
+  );
   setText("player-timer", countdownText(state));
   renderRecentTrades(state.recentTrades, "player-trades");
 
-  const canTradeNow = state.phase === "trading";
-  buyYesButton.disabled = !canTradeNow;
-  buyNoButton.disabled = !canTradeNow;
+  if (
+    typeof player.cooldownRemainingMs === "number" &&
+    player.cooldownRemainingMs > 0
+  ) {
+    setCooldown(player.cooldownRemainingMs);
+  } else {
+    updateButtonLabels();
+  }
 
   if (state.phase === "resolved" && state.finalOutcome) {
     const msg = state.isGameOver

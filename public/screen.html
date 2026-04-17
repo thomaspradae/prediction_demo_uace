@@ -82,6 +82,34 @@
       </div>
     </main>
 
+    <div id="outcome-modal" class="modal-backdrop" hidden>
+      <section
+        class="modal-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="outcome-modal-title"
+      >
+        <p class="pill">Ronda resuelta</p>
+        <p class="modal-kicker">Resultado real</p>
+        <h2 id="outcome-modal-title" class="modal-outcome">-</h2>
+        <p id="outcome-modal-summary" class="subtle modal-summary"></p>
+        <div class="modal-meta">
+          <div class="modal-meta-item">
+            <span class="modal-meta-label">Mercado cerró en</span>
+            <strong id="outcome-modal-price" class="modal-meta-value">-</strong>
+          </div>
+          <div class="modal-meta-item">
+            <span class="modal-meta-label">Ronda</span>
+            <strong id="outcome-modal-round" class="modal-meta-value">-</strong>
+          </div>
+        </div>
+        <p id="outcome-modal-question" class="modal-question"></p>
+        <div class="modal-actions">
+          <button id="close-outcome-modal" class="secondary" type="button">Cerrar</button>
+        </div>
+      </section>
+    </div>
+
     <script src="/common.js"></script>
     <script src="/screen.js"></script>
   </body>

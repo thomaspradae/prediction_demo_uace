@@ -24,6 +24,10 @@ body {
   color: var(--text);
 }
 
+body.modal-open {
+  overflow: hidden;
+}
+
 a {
   color: inherit;
 }
@@ -209,6 +213,13 @@ button:not(:disabled):hover {
   color: #1c1300;
 }
 
+.action:disabled {
+  background: #2a2f37;
+  color: var(--muted);
+  font-size: 0.95rem;
+  opacity: 1;
+}
+
 .secondary,
 .danger {
   min-height: 44px;
@@ -335,6 +346,94 @@ canvas {
   border-radius: 8px;
   border: 1px solid var(--line);
   background: #f5f8fc;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(18, 25, 35, 0.52);
+  z-index: 1000;
+}
+
+.modal-backdrop[hidden] {
+  display: none;
+}
+
+.modal-dialog {
+  width: min(560px, 100%);
+  background: rgba(255, 255, 255, 0.98);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  padding: 22px;
+}
+
+.modal-kicker {
+  margin: 14px 0 6px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.modal-outcome {
+  margin: 0 0 8px;
+  font-size: clamp(3rem, 10vw, 5.4rem);
+  line-height: 0.9;
+  font-weight: 800;
+}
+
+.modal-outcome-yes {
+  color: var(--yes);
+}
+
+.modal-outcome-no {
+  color: #8a5b07;
+}
+
+.modal-summary {
+  margin-bottom: 18px;
+}
+
+.modal-meta {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.modal-meta-item {
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #f5f8fc;
+}
+
+.modal-meta-label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.modal-meta-value {
+  font-size: 1.35rem;
+  line-height: 1.1;
+}
+
+.modal-question {
+  margin: 0 0 18px;
+  font-size: 1.05rem;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
 }
 
 .error {
@@ -560,5 +659,13 @@ th {
 
   .button-row {
     grid-template-columns: 1fr;
+  }
+
+  .modal-meta {
+    grid-template-columns: 1fr;
+  }
+
+  .modal-dialog {
+    padding: 18px;
   }
 }

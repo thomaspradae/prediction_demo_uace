@@ -14,18 +14,56 @@ const {
 const publicDir = path.join(__dirname, "public");
 let game = createEmptyGame();
 
+const IP_RATE_WINDOW_MS = 1000;
+const IP_RATE_MAX = 5;
+const ipBuckets = new Map();
+
+function ipRateLimit(req, res, next) {
+  const ip = req.ip || req.socket?.remoteAddress || "unknown";
+  const now = Date.now();
+  const bucket = ipBuckets.get(ip) || { count: 0, resetAt: now + IP_RATE_WINDOW_MS };
+
+  if (now > bucket.resetAt) {
+    bucket.count = 0;
+    bucket.resetAt = now + IP_RATE_WINDOW_MS;
+  }
+
+  bucket.count += 1;
+  ipBuckets.set(ip, bucket);
+
+  if (bucket.count > IP_RATE_MAX) {
+    return res.status(429).json({
+      error: "Demasiadas solicitudes, espera un momento.",
+      code: "IP_RATE_LIMIT"
+    });
+  }
+  return next();
+}
+
+setInterval(() => {
+  const now = Date.now();
+  for (const [ip, bucket] of ipBuckets) {
+    if (now > bucket.resetAt + 60000) ipBuckets.delete(ip);
+  }
+}, 60000).unref?.();
+
 function sendPage(response, filename) {
   response.sendFile(path.join(publicDir, filename));
 }
 
 function sendError(response, error) {
-  response.status(400).json({ error: error.message || "La solicitud falló." });
+  const status = error.code === "COOLDOWN" ? 429 : 400;
+  const payload = { error: error.message || "La solicitud falló." };
+  if (error.code) payload.code = error.code;
+  if (typeof error.remainMs === "number") payload.remainMs = error.remainMs;
+  response.status(status).json(payload);
 }
 
 function createApp() {
   const app = express();
 
-  app.use(express.json());
+  app.set("trust proxy", 1);
+  app.use(express.json({ limit: "4kb" }));
   app.use(express.static(publicDir));
 
   app.get("/", (req, res) => sendPage(res, "index.html"));
@@ -68,7 +106,7 @@ function createApp() {
     }
   });
 
-  app.post("/api/trade", (req, res) => {
+  app.post("/api/trade", ipRateLimit, (req, res) => {
     try {
       const tradeRecord = trade(game, req.body?.playerId, req.body?.side);
       res.json({
